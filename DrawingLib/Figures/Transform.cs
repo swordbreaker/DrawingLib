@@ -10,7 +10,6 @@ namespace DrawingLib.Figures
         public float Rotation { get; set; } = 0;
         public Vector2 Scale { get; set; } = Vector2.One;
 
-        // L = T * R * S
         public Matrix3x2 TransformationMatrix =>
             Matrix3x2.CreateRotation(MathUtil.DegToRad(Rotation)) *
             Matrix3x2.CreateTranslation(Position) *
@@ -27,20 +26,36 @@ namespace DrawingLib.Figures
             TransformationMatrix *
             (Parent?.AbsoluteTransformationMatrix ?? Matrix3x2.Identity);
 
-        //public Matrix3x2 AbsoluteTransformationMatrix =>
-        //    (Parent?.AbsoluteTransformationMatrix ?? Matrix3x2.Identity) *
-        //    TransformationMatrix;
+        public Matrix3x2 GetTransformationMatrixRelativeTo(Transform? transform)
+        {
+            if(transform == null)
+            {
+                return AbsoluteTransformationMatrix;
+            }
 
+            var finalMatrix = TransformationMatrix;
+            var current = this.Parent;
+            while(current != null && current != transform)
+            {
+                finalMatrix *= current.TransformationMatrix;
+                current = current.Parent;
+            }
 
-        //Matrix3x2.CreateScale(AbsoluteScale) *
-        //Matrix3x2.CreateRotation(MathUtil.DegToRad(AbsoluteRotation)) *
-        //Matrix3x2.CreateTranslation(AbsolutePosition);
+            if(current == null)
+            {
+                return AbsoluteTransformationMatrix;
+            }
+            else
+            {
+                return finalMatrix;
+            }
+        }
 
-        //public Matrix3x2 AbsoluteTransformationMatrix =>
-        //    Matrix3x2.Identity *
-        //    Matrix3x2.CreateTranslation(AbsolutePosition) *
-        //    Matrix3x2.CreateRotation(MathUtil.DegToRad(AbsoluteRotation)) *
-        //    Matrix3x2.CreateScale(AbsoluteScale);
+        public Vector2 GetPositionRelativeTo(Transform? transform)
+        {
+            var matrix = GetTransformationMatrixRelativeTo(transform);
+            return Vector2.Transform(this.Position, matrix);
+        }
 
         public void SetRadRotation(float rad)
         {

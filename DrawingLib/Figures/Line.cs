@@ -28,6 +28,9 @@ namespace DrawingLib.Figures
             var lineVec = new Vector2(end.X, end.Y) - new Vector2(start.X, start.Y);
             var rotation = lineVec.Rotation(downVec);
 
+            StartFigure.Transform.Parent = Transform;
+            EndFigure.Transform.Parent = Transform;
+
             StartFigure.Transform.SetRadRotation(rotation);
             StartFigure.Transform.SetPosition(start);
 

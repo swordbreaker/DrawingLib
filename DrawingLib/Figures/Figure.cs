@@ -42,33 +42,18 @@ namespace DrawingLib.Figures
 
         public abstract RectF BoundingBox { get; }
 
-        private Random rand = new Random();
         private IFigure? _parent = null;
 
         public void Draw(ICanvas canvas)
         {
             canvas.SaveState();
             canvas.ResetState();
-            //canvas.Rotate(Transform.AbsoluteRotation);
-            //canvas.Scale(Transform.AbsoluteScale.X, Transform.AbsoluteScale.Y);
-            //canvas.Translate(Transform.AbsolutePosition.X, Transform.AbsolutePosition.Y);
-
-            //canvas.ResetState();
             canvas.ConcatenateTransform(Transform.AbsoluteTransformationMatrix);
 
             Render(canvas);
 
             canvas.ConcatenateTransform(Matrix3x2.Identity);
             canvas.RestoreState();
-            //canvas.SaveState();
-            //canvas.ResetState();
-
-            //canvas.StrokeColor = Color.FromHsv(rand.NextSingle(), 1, 1);
-            //foreach (var item in AbsoluteAnchorPoints)
-            //{
-            //    canvas.DrawCircle(item, 2);
-            //}
-            //canvas.RestoreState();
         }
 
         protected abstract void Render(ICanvas canvas);
@@ -93,10 +78,8 @@ namespace DrawingLib.Figures
             return this;
         }
 
-        public static FigureConnection operator >>(Figure a, Figure b)
-            => new FigureConnection(a, b);
+        public static FigureConnection operator >>(Figure a, Figure b) => new(a, b);
 
-        public static FigureConnection operator <<(Figure a, Figure b)
-            => new FigureConnection(b, a);
+        public static FigureConnection operator <<(Figure a, Figure b) => new(b, a);
     }
 }
