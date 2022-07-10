@@ -29,7 +29,7 @@ namespace DrawingLib.Drawings
             // Output
             var outputCirlce = Circle(cicleRadius) with { Text = "Output" };
 
-            var hbox = HBox() with { Marign = 10 };
+            var hbox = HBox() with { Marign = 0, ElementMargin = 25 };
             hbox.Add(
                 inputCirlce,
                 encoder,
@@ -49,8 +49,8 @@ namespace DrawingLib.Drawings
                 c.StrokeSize = 4;
                 c.FillColor = Colors.Black;
 
-                var start = getRelativePos(outputCirlce.Transform);
-                var end = getRelativePos(inputCirlce.Transform);
+                var start = outputCirlce.Transform.Position;
+                var end = inputCirlce.Transform.Position;
                 var p0 = start + (end - start) * 1f + new Vector2(0, 100);
                 var p1 = start + (end - start) * 2 / 3f + new Vector2(0, 100);
                 var p2 = start + (end - start) * 1 / 3f + new Vector2(0, 100);

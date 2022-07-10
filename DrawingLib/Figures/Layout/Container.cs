@@ -12,7 +12,6 @@ namespace DrawingLib.Figures.Layout
 
         protected override void Render(ICanvas canvas)
         {
-            
         }
     }
 }

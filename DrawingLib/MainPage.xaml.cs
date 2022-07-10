@@ -16,7 +16,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
             if (Drawable.Scale != value)
         {
                 Drawable.Scale = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Scale"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Zoom"));
                 GraphicsView.Invalidate();
             }
         }

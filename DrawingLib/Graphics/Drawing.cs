@@ -24,6 +24,7 @@ namespace DrawingLib.Graphics
             var container = new Container(Margin);
             container.Add(DrawFigures().ToArray());
             container.Transform.Scale = new Vector2(scale);
+            Renderer.Layout(canvas, container);
             Renderer.Render(canvas, container);
         }
     }

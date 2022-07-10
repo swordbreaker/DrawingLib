@@ -1,6 +1,6 @@
 ﻿namespace DrawingLib.Figures
 {
-    public record Circle(PointF Center, float Radius, string Text = "", float TextMargin = 20) : Figure(Center)
+    public record Circle(PointF Center, float Radius, string Text = "", float TextMargin = 10) : Figure(Center)
     {
         public override IEnumerable<PointF> AnchorPoints => 
             new[] { 
@@ -15,7 +15,7 @@
         protected override void Render(ICanvas canvas)
         {
             canvas.DrawCircle(PointF.Zero, Radius);
-            canvas.DrawString(Text,0, Radius + TextMargin, HorizontalAlignment.Center);
+            canvas.DrawString(Text, 0, -(Radius + TextMargin), HorizontalAlignment.Center);
         }
     }
 }

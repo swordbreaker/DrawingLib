@@ -2,7 +2,7 @@
 
 namespace DrawingLib.Figures.Layout
 {
-    public record HBox(float Marign, float ElementMargin) : Figure(Vector2.Zero)
+    public record HBox(float Marign, float ElementMargin) : Figure(Vector2.Zero), ILayout
     {
         public HBox(IEnumerable<IFigure> figures, float margin = 20f, float elementMargin = 20f) : this(margin, elementMargin)
         {
@@ -20,7 +20,7 @@ namespace DrawingLib.Figures.Layout
         public static HBox Create(float margin = 10f, float elementMargin = 20f) => 
             new(Enumerable.Empty<IFigure>(), margin, elementMargin);
 
-        private void Layout()
+        public void Layout()
         {
             var figs = Childrens.ToArray();
             if(figs.Length > 0)
@@ -32,7 +32,7 @@ namespace DrawingLib.Figures.Layout
 
                     if (i < figs.Length - 1)
                     {
-                        currentXPos += figs[i].AbsoluteBoundingBox.Width / 2 + figs[i+1].AbsoluteBoundingBox.Width/2 + ElementMargin;
+                        currentXPos += figs[i].BoundingBox.Width / 2 + figs[i+1].BoundingBox.Width/2 + ElementMargin;
                     }
                 }
             }
@@ -44,7 +44,6 @@ namespace DrawingLib.Figures.Layout
 
         protected override void Render(ICanvas canvas)
         {
-            Layout();
             foreach (var figure in Childrens)
             {
                 figure.Draw(canvas);
