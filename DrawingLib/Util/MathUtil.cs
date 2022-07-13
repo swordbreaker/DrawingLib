@@ -44,5 +44,11 @@ namespace DrawingLib.Util
                 new PointF(self.Center.X, self.Top),
                 new PointF(self.Center.X, self.Bottom),
             };
+
+        public static SizeF Max(this SizeF a, SizeF b) =>
+            new(MathF.Max(a.Width, b.Width), MathF.Max(a.Height, b.Height));
+
+        public static PointF ToPoint(this SizeF size) => new PointF(size.Width, size.Height);
+        public static Vector2 ToVec2(this SizeF size) => new Vector2(size.Width, size.Height);
     }
 }

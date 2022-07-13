@@ -2,23 +2,13 @@
 
 namespace DrawingLib.Figures.Layout
 {
-    public record HBox(float Marign, float ElementMargin) : Figure(Vector2.Zero), ILayout
+    public record HBox(float Marign = 10f, float ElementMargin = 20f) : Figure(Vector2.Zero), ILayout
     {
         public HBox(IEnumerable<IFigure> figures, float margin = 20f, float elementMargin = 20f) : this(margin, elementMargin)
         {
             Add(figures.ToArray());
             BoundingBox = Childrens.Aggregate(Rect.Zero, (old, @new) => old.Union(@new.AbsoluteBoundingBox));
-            AnchorPoints = new[]
-            {
-                new PointF(BoundingBox.Left, BoundingBox.Center.Y),
-                new PointF(BoundingBox.Right, BoundingBox.Center.Y),
-                new PointF(BoundingBox.Center.X, BoundingBox.Top),
-                new PointF(BoundingBox.Center.X, BoundingBox.Bottom),
-            };
         }
-
-        public static HBox Create(float margin = 10f, float elementMargin = 20f) => 
-            new(Enumerable.Empty<IFigure>(), margin, elementMargin);
 
         public void Layout()
         {
@@ -37,8 +27,6 @@ namespace DrawingLib.Figures.Layout
                 }
             }
         }
-
-        public override IEnumerable<PointF> AnchorPoints { get; } = Enumerable.Empty<PointF>();
 
         public override RectF BoundingBox { get; }
 

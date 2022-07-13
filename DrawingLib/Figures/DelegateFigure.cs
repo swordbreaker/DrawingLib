@@ -10,8 +10,6 @@ namespace DrawingLib.Figures
         public static DelegateFigure Create(DrawDelegate drawFunction) => 
             new(PointF.Zero, drawFunction);
 
-        public override IEnumerable<PointF> AnchorPoints { get; } = Enumerable.Empty<PointF>();
-
         public override RectF BoundingBox { get; } = Rect.Zero;
 
         private Vector2 GetRelativePos(Transform transform) => 

@@ -1,6 +1,10 @@
 ﻿using DrawingLib.Figures;
+using DrawingLib.Figures.Layout;
+using DrawingLib.Figures.Nodes;
 using DrawingLib.Graphics;
+using DrawingLib.Presets;
 using System.Numerics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DrawingLib.Drawings
 {
@@ -10,26 +14,35 @@ namespace DrawingLib.Drawings
 
         protected override IEnumerable<IFigure> DrawFigures()
         {
-            const float cicleRadius = 5;
-            var rectSize = new SizeF(60, 60);
-            var bottleNeckSize = new SizeF(rectSize.Width * 0.75f, rectSize.Height);
+            Circle.DefaultPreset = Circle.DefaultPreset with { Radius = 5f };
+            var encoderDecoderPreset = new BoxPreset()
+            {
+                FillColor = Colors.Yellow,
+                Size = new SizeF(60, 60)
+            };
+
+            var bottleNeckPreset = new BoxPreset
+            {
+                FillColor = Colors.Aquamarine,
+                Size = new SizeF(encoderDecoderPreset.Size.Width * 0.75f, encoderDecoderPreset.Size.Height)
+             };
 
             // Input
-            var inputCirlce = Circle(cicleRadius) with { Text = "Input", FillColor = Colors.Red };
+            var inputCirlce = new Circle() with { Text = "Input", FillColor = Colors.Red, TextMargin = new SizeF(5, 5), TextPosition = TextPosition.OuterTop };
 
             // Encoder
-            var encoder = Box(rectSize) with { Text = "Encoder", FillColor = Colors.Yellow };
+            var encoder = new Box(encoderDecoderPreset) with { Text = "Encoder" };
 
             // Bottleneck
-            var bottleNeck = Box(bottleNeckSize) with { Text = "Bottleneck", FillColor = Colors.Aquamarine };
+            var bottleNeck = new Box(bottleNeckPreset) with { Text = "Bottleneck", FillColor = Colors.Aquamarine };
 
             // Decoder
-            var decoder = Box(rectSize) with { Text = "Decoder", FillColor = Colors.Yellow };
+            var decoder = new Box(encoderDecoderPreset) with { Text = "Decoder", };
 
             // Output
-            var outputCirlce = Circle(cicleRadius) with { Text = "Output", FillColor = Colors.Red };
+            var outputCirlce = new Circle() with { Text = "Output", FillColor = Colors.Red, TextMargin = new SizeF(5, 5), TextPosition = TextPosition.OuterTop };
 
-            var hbox = HBox() with { Marign = 0, ElementMargin = 25 };
+            var hbox = new HBox() with { Marign = 0, ElementMargin = 25 };
             hbox.Add(
                 inputCirlce,
                 encoder,

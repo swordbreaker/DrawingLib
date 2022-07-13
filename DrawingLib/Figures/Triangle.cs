@@ -23,7 +23,7 @@ namespace DrawingLib.Figures
             canvas.FillPath(arrow);
         }
 
-        public override IEnumerable<PointF> AnchorPoints => 
+        protected IEnumerable<PointF> Vertices => 
             new []
             {
                 new PointF(-5, -5),
@@ -31,6 +31,6 @@ namespace DrawingLib.Figures
                 new PointF(5, -5),
             };
 
-        public override RectF BoundingBox => MathUtil.CalculateBoundingBox(AnchorPoints.ToArray());
+        public override RectF BoundingBox => MathUtil.CalculateBoundingBox(Vertices.ToArray());
     }
 }

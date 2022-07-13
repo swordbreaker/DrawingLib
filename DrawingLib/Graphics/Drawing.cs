@@ -1,15 +1,12 @@
 ﻿using DrawingLib.Figures;
 using DrawingLib.Figures.Layout;
+using DrawingLib.Figures.Nodes;
 using System.Numerics;
 
 namespace DrawingLib.Graphics
 {
     public abstract class Drawing
     {
-        protected Box Box(SizeF size) => new Box(PointF.Zero, size);
-        protected Circle Circle(float radius) => new Circle(PointF.Zero, radius);
-        protected HBox HBox() => Figures.Layout.HBox.Create();
-
         protected virtual PointF Margin { get; } = new PointF(20, 20);
         protected virtual Color BackgroundColor { get; } = Colors.White;
 

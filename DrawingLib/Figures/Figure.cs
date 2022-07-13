@@ -30,11 +30,6 @@ namespace DrawingLib.Figures
 
         private HashSet<IFigure> InternalChildrens => (HashSet<IFigure>)Childrens;
 
-        public IEnumerable<PointF> AbsoluteAnchorPoints => AnchorPoints
-            .Select(p => p.TransformBy(Transform.AbsoluteTransformationMatrix));
-
-        public abstract IEnumerable<PointF> AnchorPoints { get; }
-
         public RectF AbsoluteBoundingBox => BoundingBox
             .GetCorners()
             .Select(p => p.TransformBy(Transform.AbsoluteTransformationMatrix))
@@ -77,9 +72,5 @@ namespace DrawingLib.Figures
             }
             return this;
         }
-
-        public static FigureConnection operator >>(Figure a, Figure b) => new(a, b);
-
-        public static FigureConnection operator <<(Figure a, Figure b) => new(b, a);
     }
 }

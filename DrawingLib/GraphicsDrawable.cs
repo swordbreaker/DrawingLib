@@ -8,7 +8,8 @@ public class GraphicsDrawable : IDrawable
 {
     public float Scale { get; set; } = 1f;
 
-    private readonly Drawing Drawing = new AutoEncoderRecostructionLoss();
+    //private readonly Drawing Drawing = new AutoEncoderRecostructionLoss();
+    private readonly Drawing Drawing = new Autoencoder();
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {

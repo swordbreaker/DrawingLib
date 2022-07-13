@@ -1,49 +1,49 @@
-﻿using DrawingLib.Util;
-using System.Numerics;
+﻿using DrawingLib.Presets;
 
-namespace DrawingLib.Figures
+namespace DrawingLib.Figures.Nodes
 {
-    public record Box : Figure
+    public abstract record FigureNode(PointF Position, FigureNodePreset Preset) : Figure(Position), IFigureNode
     {
-        public Box(PointF pos, SizeF size) : base(pos)
+        protected FigureNode(PointF Postion) : this(Postion, new DefaultFigureNodePreset())
         {
-            Rect = new Rect(-size.Width / 2, -size.Height / 2, size.Width, size.Height);
         }
 
-        public static Box Create(RectF rect) => 
-            new Box(rect.Center, rect.Size);
+        private FigureNodePreset Preset { get; init; } = Preset;
+        public Color StrokeColor { get; init; } = Preset.StrokeColor;
+        public Color FillColor { get; init; } = Preset.FillColor;
+        public float StrokeSize { get; init; } = Preset.StrokeSize;
+        public SizeF TextMargin { get; init; } = Preset.TextMargin;
+        public TextFlow TextFlow { get; init; } = Preset.TextFlow;
+        public TextPosition TextPosition { get; init; } = Preset.TextPosition;
+        public string Text { get; init; } = Preset.Text;
 
-        public RectF Rect { get; init; }
-        public Color StrokeColor { get; init; } = Colors.Black;
-        public Color FillColor { get; init; } = Colors.Transparent;
-        public float CornerRadius { get; init; } = 5f;
-        public float TextMargin { get; init; } = 5f;
-        public TextFlow TextFlow { get; init; } = TextFlow.ClipBounds;
-        public TextPosition TextPosition { get; init; } = TextPosition.Center;
-        public string Text { get; init; } = "";
+        public override RectF BoundingBox => BoudingBoxWithoutText.Union(GetTextRect());
 
-        public Box Inflate(SizeF size) => this with { Rect = Rect.Inflate(size) };
+        protected abstract RectF BoudingBoxWithoutText { get; }
 
-        public override IEnumerable<PointF> AnchorPoints => Rect
-            .GetRectAnchorPoints();
+        public IEnumerable<PointF> AbsoluteAnchorPoints => AnchorPoints
+            .Select(p => p.TransformBy(Transform.AbsoluteTransformationMatrix));
 
-        public override RectF BoundingBox => 
-            Rect.Union(GetTextRect());
+        public abstract IEnumerable<PointF> AnchorPoints { get; }
+
+        public static FigureConnection operator >>(FigureNode a, FigureNode b) => new(a, b);
 
         protected override void Render(ICanvas canvas)
         {
             canvas.StrokeColor = StrokeColor ?? Colors.Black;
             canvas.FillColor = FillColor ?? Colors.Transparent;
+            canvas.StrokeSize = StrokeSize;
 
-            canvas.FillRoundedRectangle(Rect, CornerRadius);
-            canvas.DrawRoundedRectangle(Rect, CornerRadius);
-
+            DrawFigure(canvas);
             PlaceText(canvas);
         }
 
+        protected abstract void DrawFigure(ICanvas canvas);
+
         private RectF GetTextRect()
         {
-            var rectWithMargin = Rect.Inflate(new Size(-TextMargin));
+            var rectWithMargin = BoudingBoxWithoutText.Inflate(TextMargin * -1);
+            var outerRect = BoudingBoxWithoutText.Union(new Rect(-25f, 0, 50f, 10f));
 
             return TextPosition switch
             {
@@ -52,10 +52,10 @@ namespace DrawingLib.Figures
                 TextPosition.Left => rectWithMargin,
                 TextPosition.Right => rectWithMargin,
                 TextPosition.Center => rectWithMargin,
-                TextPosition.OuterTop => Rect.Offset(0, -(Rect.Height + TextMargin)),
-                TextPosition.OuterLeft => Rect.Offset(-(Rect.Height + TextMargin), 0),
-                TextPosition.OuterRight => Rect.Offset(Rect.Height + TextMargin, 0),
-                TextPosition.OuterBottom => Rect.Offset(0, (Rect.Height + TextMargin)),
+                TextPosition.OuterTop => outerRect.Offset(0, -(outerRect.Height + TextMargin.Height)),
+                TextPosition.OuterLeft => outerRect.Offset(-(BoudingBoxWithoutText.Height + TextMargin.Width), 0),
+                TextPosition.OuterRight => outerRect.Offset(BoudingBoxWithoutText.Height + TextMargin.Width, 0),
+                TextPosition.OuterBottom => outerRect.Offset(0, BoudingBoxWithoutText.Height + TextMargin.Height),
                 _ => RectF.Zero,
             };
         }

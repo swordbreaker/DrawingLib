@@ -10,9 +10,6 @@ namespace DrawingLib.Figures
     {
         void Draw(ICanvas canvas);
 
-        IEnumerable<PointF> AbsoluteAnchorPoints { get; }
-        IEnumerable<PointF> AnchorPoints { get; }
-
         RectF AbsoluteBoundingBox { get; }
         RectF BoundingBox { get; }
 
