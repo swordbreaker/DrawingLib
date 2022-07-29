@@ -18,7 +18,7 @@ namespace DrawingLib.Figures.Layout
                 var currentXPos = Marign;
                 for(int i = 0; i < figs.Length; i++)
                 {
-                    figs[i].Transform.Position = new Vector2(currentXPos, 0) + Transform.Position;
+                    figs[i].Transform.Position = figs[i].Transform.Position with { X = currentXPos };
 
                     if (i < figs.Length - 1)
                     {

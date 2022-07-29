@@ -66,5 +66,13 @@ namespace DrawingLib.Figures
         {
             Position = new Vector2(point.X, point.Y);
         }
+
+        public void SetPosition(float x, float y) => this.Position = new Vector2(x, y);
+
+        public void SetPositionX(float x) => this.Position = new Vector2(x, Position.Y);
+
+        public void SetPositionY(float y) => this.Position = new Vector2(Position.X, y);
+
+        public void Translate(Vector2 p) => this.Position += p;
     }
 }

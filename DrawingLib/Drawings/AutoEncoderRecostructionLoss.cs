@@ -1,10 +1,10 @@
 ﻿using DrawingLib.Figures;
+using DrawingLib.Figures.AnchorPoints;
 using DrawingLib.Figures.Layout;
 using DrawingLib.Figures.Nodes;
 using DrawingLib.Graphics;
 using DrawingLib.Presets;
 using System.Numerics;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace DrawingLib.Drawings
 {
@@ -62,8 +62,8 @@ namespace DrawingLib.Drawings
                 c.StrokeSize = 4;
                 c.FillColor = Colors.Black;
 
-                var start = (Vector2)outputCirlce.AnchorPoints.Last() + outputCirlce.Transform.Position;
-                var end = (Vector2)inputCirlce.AnchorPoints.Last() + inputCirlce.Transform.Position;
+                var start = outputCirlce.Anchor.Bottom.AbsolutePosition + outputCirlce.Transform.Position;
+                var end = inputCirlce.Anchor.Bottom.AbsolutePosition + inputCirlce.Transform.Position;
                 var directionVec = (end - start);
                 var offsetY = new Vector2(0, 100);
                 var p0 = start + directionVec * 1f + offsetY;

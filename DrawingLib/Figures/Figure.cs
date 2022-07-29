@@ -30,12 +30,18 @@ namespace DrawingLib.Figures
 
         private HashSet<IFigure> InternalChildrens => (HashSet<IFigure>)Childrens;
 
-        public RectF AbsoluteBoundingBox => BoundingBox
-            .GetCorners()
-            .Select(p => p.TransformBy(Transform.AbsoluteTransformationMatrix))
-            .CalculateBoundingBox();
+        public RectF AbsoluteBoundingBox => GetTranslatedBoundingBox();
 
         public abstract RectF BoundingBox { get; }
+
+        public RectF GetTranslatedBoundingBox(Transform? transform = null)
+        {
+            var m = this.Transform.GetTransformationMatrixRelativeTo(transform);
+            return BoundingBox
+                .GetCorners()
+                .Select(p => Vector2.Transform(p, m))
+                .CalculateBoundingBox();
+        }
 
         private IFigure? _parent = null;
 
@@ -67,8 +73,14 @@ namespace DrawingLib.Figures
         {
             foreach (var fig in figures)
             {
-                fig.Parent = null;
-                InternalChildrens.Remove(fig);
+                if (InternalChildrens.Contains(fig))
+                {
+                    InternalChildrens.Remove(fig);
+                    if (fig.Parent?.Equals(this) ?? false)
+                    {
+                        fig.Parent = null;
+                    }
+                }
             }
             return this;
         }

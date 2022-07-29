@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Text;
+using System.ComponentModel;
 
 namespace DrawingLib;
 
@@ -7,6 +9,8 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
     public GraphicsDrawable Drawable { get; } = new();
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    private string _savePath;
 
     public float Zoom
     {
@@ -22,11 +26,25 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
         }
     }
 
+    public string SavePath
+    {
+        get => _savePath;
+        set
+        {
+            if (_savePath != value)
+            {
+                _savePath = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SavePath"));
+            }
+        }
+    }
+
     public MainPage()
 	{
 		InitializeComponent();
         this.BindingContext = this;
         Loaded += MainPage_Loaded;
+        SavePath = "C:\\Users\\tobia\\Desktop\\test.png";
     }
 
     private void MainPage_Loaded(object? sender, EventArgs e)
@@ -46,7 +64,7 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
 
 		if(screenShot != null)
 		{
-            using var stream = File.OpenWrite("C:\\Users\\tobia\\Desktop\\test.png");
+            using var stream = File.OpenWrite(SavePath);
             await screenShot.CopyToAsync(stream, ScreenshotFormat.Png);
         }
     }

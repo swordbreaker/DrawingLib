@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DrawingLib.Figures.AnchorPoints;
+using System.Numerics;
 
 namespace DrawingLib.Figures.Nodes
 {
     public interface IFigureNode : IFigure
     {
-        IEnumerable<PointF> AbsoluteAnchorPoints { get; }
-        IEnumerable<PointF> AnchorPoints { get; }
+        AnchorPoint GetAnchorPoint(float p);
+        Anchor Anchor { get; }
     }
 }

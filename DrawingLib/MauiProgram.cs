@@ -1,4 +1,5 @@
-﻿namespace DrawingLib;
+﻿global using System.Numerics;
+namespace DrawingLib;
 
 public static class MauiProgram
 {

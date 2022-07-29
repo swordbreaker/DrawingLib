@@ -23,12 +23,12 @@ namespace DrawingLib.Figures
             canvas.FillPath(arrow);
         }
 
-        protected IEnumerable<PointF> Vertices => 
+        protected IEnumerable<Vector2> Vertices => 
             new []
             {
-                new PointF(-5, -5),
-                new PointF(0, 0),
-                new PointF(5, -5),
+                new Vector2(-5, -5),
+                new Vector2(0, 0),
+                new Vector2(5, -5),
             };
 
         public override RectF BoundingBox => MathUtil.CalculateBoundingBox(Vertices.ToArray());

@@ -29,5 +29,7 @@
         public IFigure Scale(float dx, float dy) => this;
 
         public IFigure Translate(float x, float y) => this;
+
+        public RectF GetTranslatedBoundingBox(Transform? transform = null) => BoundingBox;
     }
 }

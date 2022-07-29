@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DrawingLib.Figures
+﻿namespace DrawingLib.Figures
 {
     public interface IFigure
     {
@@ -13,14 +7,16 @@ namespace DrawingLib.Figures
         RectF AbsoluteBoundingBox { get; }
         RectF BoundingBox { get; }
 
-        public Transform Transform { get; }
+        Transform Transform { get; }
 
-        public IFigure? Parent { get; set; }
+        IFigure? Parent { get; set; }
 
-        public IReadOnlyCollection<IFigure> Childrens { get; }
+        IReadOnlyCollection<IFigure> Childrens { get; }
 
-        public IFigure Add(params IFigure[] figures);
+        IFigure Add(params IFigure[] figures);
 
-        public IFigure Remove(params IFigure[] figures);
+        IFigure Remove(params IFigure[] figures);
+
+        RectF GetTranslatedBoundingBox(Transform? transform = null);
     }
 }

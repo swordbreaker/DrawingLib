@@ -7,20 +7,19 @@
     <VerticalStackLayout>
         <GraphicsView x:Name="GraphicsView"
             HeightRequest="800"
-            WidthRequest="1300"/>
+            WidthRequest="1000"/>
         <HorizontalStackLayout>
-            <Button Text="Reload" Clicked="Reload"></Button>
-            <Button Text="Save" Clicked="Save"></Button>
-
-            <BoxView/>
+            <Button Text="Reload" Clicked="Reload" Margin="5"/>
             <Slider x:Name="scaleSlider"
                     Value="{Binding Zoom}"
                     Minimum="0.01"
                     Maximum="10"
                     WidthRequest="200"
-                VerticalOptions="Center" />
-            <Entry Text="{Binding Zoom}" />
+                    VerticalOptions="Center" 
+                    Margin="5"/>
+            <Entry Text="{Binding Zoom}" Margin="5"/>
+            <Entry Text="{Binding SavePath}" WidthRequest="400" Margin="5"/>
+            <Button Text="Save" Clicked="Save" Margin="5"></Button>
         </HorizontalStackLayout>
     </VerticalStackLayout>
- 
 </ContentPage>

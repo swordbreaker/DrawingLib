@@ -1,4 +1,7 @@
-﻿using DrawingLib.Presets;
+﻿using DrawingLib.Figures.AnchorPoints;
+using DrawingLib.Figures.Connections;
+using DrawingLib.Presets;
+using DrawingLib.Util;
 
 namespace DrawingLib.Figures.Nodes
 {
@@ -21,12 +24,11 @@ namespace DrawingLib.Figures.Nodes
 
         protected abstract RectF BoudingBoxWithoutText { get; }
 
-        public IEnumerable<PointF> AbsoluteAnchorPoints => AnchorPoints
-            .Select(p => p.TransformBy(Transform.AbsoluteTransformationMatrix));
+        public virtual Anchor Anchor => new(this);
 
-        public abstract IEnumerable<PointF> AnchorPoints { get; }
-
-        public static FigureConnection operator >>(FigureNode a, FigureNode b) => new(a, b);
+        public static FigureConnection operator >>(FigureNode a, FigureNode b) => new(a, b) { LineFactory = AnchorConnection.NoneToArrow };
+        public static AnchorConnection operator >>(FigureNode a, AnchorPoint b) => new(FigureConnection.FindNearestAnchor(a.Anchor.All, new[] {b}).start, b) { LineFactory = AnchorConnection.NoneToArrow };
+        public static FigureConnection operator -(FigureNode a, FigureNode b) => new(a, b) { LineFactory = AnchorConnection.NoneTonone };
 
         protected override void Render(ICanvas canvas)
         {
@@ -36,14 +38,25 @@ namespace DrawingLib.Figures.Nodes
 
             DrawFigure(canvas);
             PlaceText(canvas);
+
+            //foreach (var a in Anchor.All)
+            //{
+            //    canvas.StrokeColor = Colors.Violet;
+            //    canvas.DrawCircle(a, 5f);
+            //}
         }
 
         protected abstract void DrawFigure(ICanvas canvas);
 
         private RectF GetTextRect()
         {
+            if (string.IsNullOrEmpty(Text))
+            {
+                return BoudingBoxWithoutText;
+            }
+
             var rectWithMargin = BoudingBoxWithoutText.Inflate(TextMargin * -1);
-            var outerRect = BoudingBoxWithoutText.Union(new Rect(-25f, 0, 50f, 10f));
+            var outerRect = BoudingBoxWithoutText.Union(new Rect(-30f, 0, 60f, 10f));
 
             return TextPosition switch
             {
@@ -63,6 +76,8 @@ namespace DrawingLib.Figures.Nodes
         private void PlaceText(ICanvas canvas)
         {
             var rect = GetTextRect();
+
+            canvas.StrokeColor = Preset.TextColor;
 
             switch (TextPosition)
             {
@@ -94,6 +109,35 @@ namespace DrawingLib.Figures.Nodes
                     canvas.DrawString(Text, rect, HorizontalAlignment.Center, VerticalAlignment.Top, TextFlow);
                     break;
             }
+            canvas.RestoreState();
+        }
+
+        public virtual AnchorPoint GetAnchorPoint(float p)
+        {
+            // Normalize p to [0, -1]
+            if (p < 0)
+            {
+                if(p < -1)
+                {
+                    p += (p + 1);
+                }
+                p = 1 - p;
+            }
+            else if (p > 1)
+            {
+                p -= (p - 1);
+            }
+
+            var corners = BoundingBox.GetCorners();
+            var point = p switch
+            {
+                < 1 / 4f => Vector2.Lerp(corners[0], corners[1], p * 4),
+                < 2 / 4f => Vector2.Lerp(corners[1], corners[2], (p - 1 / 4f) * 4),
+                < 3 / 4f => Vector2.Lerp(corners[2], corners[3], (p - 2 / 4f) * 4),
+                _ => Vector2.Lerp(corners[3], corners[0], (p - 3 / 4f) * 4),
+            };
+
+            return new AnchorPoint(point, Transform);
         }
     }
 }
